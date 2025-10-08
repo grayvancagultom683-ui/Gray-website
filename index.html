@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Melody of Light — Gray</title>
+<style>
+  :root{
+    --bg1: #f7fbff;
+    --bg2: #fff7fb;
+    --card: rgba(255,255,255,0.8);
+    --soft: #a8c3ff; /* soft blue */
+    --accent: #d7b8ff; /* soft purple */
+    --muted: #6b7082;
+    --glass: rgba(255,255,255,0.55);
+  }
+  <a href="file:///storage/emulated/0/Documents/gray.html" style="color:#4da3ff; text-decoration:underline;">
+  Open Melody of Light 🌙
+</a>
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(216,232,255,0.6), transparent 10%),
+                radial-gradient(900px 400px at 90% 90%, rgba(250,230,255,0.6), transparent 8%),
+                linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:#222;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+  }
+
+  /* App container */
+  .app {
+    width:100%;
+    max-width:980px;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow: 0 10px 30px rgba(25,30,50,0.12);
+    backdrop-filter: blur(6px) saturate(120%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.5));
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 28px;
+    gap:16px;
+  }
+  .logo{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .logo .icon{
+    width:48px;height:48px;border-radius:12px;
+    background:linear-gradient(135deg,var(--soft),var(--accent));
+    box-shadow: 0 6px 18px rgba(168,195,255,0.25), inset 0 -6px 14px rgba(255,255,255,0.25);
+    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+    font-size:18px;
+  }
+  .logo .title{
+    font-weight:700;
+    letter-spacing:0.2px;
+  }
+  nav{display:flex;gap:10px;align-items:center}
+  .nav-link{
+    padding:8px 12px;border-radius:10px;font-weight:600;
+    color:var(--muted);text-decoration:none;cursor:pointer;
+    transition:all .28s ease;
+  }
+  .nav-link:hover{transform:translateY(-3px); color:#333}
+  .nav-link.active{
+    background:linear-gradient(90deg, rgba(168,195,255,0.18), rgba(215,184,255,0.14));
+    color: #2b2f42;
+    box-shadow: 0 6px 18px rgba(168,195,255,0.12);
+  }
+
+  /* content area */
+  .content{
+    display:flex;
+    gap:32px;
+    padding:28px;
+    align-items:stretch;
+  }
+
+  /* Left column (main view) */
+  .view{
+    flex:1;
+    min-height:420px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Right column (side card) */
+  .side{
+    width:320px;
+    min-width:240px;
+    border-radius:14px;
+    padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.5));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 30px rgba(40,30,70,0.06);
+    display:flex;flex-direction:column;gap:12px;
+    align-items:stretch;justify-content:flex-start;
+  }
+
+  /* pages */
+  .page{
+    position:absolute;inset:0;padding:24px;border-radius:12px;
+    transition: transform .7s cubic-bezier(.2,.9,.25,1), opacity .5s ease;
+    opacity:0; transform: translateY(12px) scale(.995); pointer-events:none;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .page.show{
+    opacity:1; transform: translateY(0) scale(1); pointer-events:auto;
+  }
+
+  /* Hero / Melody of Light */
+  .hero{
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px;
+    height:100%;
+    padding:36px;
+    border-radius:12px;
+    background: linear-gradient(135deg, rgba(168,195,255,0.08), rgba(215,184,255,0.06));
+    backdrop-filter: blur(2px);
+  }
+  .hero h1{
+    margin:0;font-size:36px;letter-spacing:0.6px;
+    color: #1f2540;
+  }
+  .hero p.lead{
+    margin:0;color:var(--muted);max-width:66%;
+    font-size:15px;
+  }
+  .quote{
+    margin-top:12px;padding:14px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
+    font-style:italic;color:#3a3f56;box-shadow: 0 6px 20px rgba(90,80,140,0.04);
+  }
+
+  /* small cards for other pages */
+  .card{
+    background:var(--glass);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(80,60,120,0.04);
+  }
+
+  /* Login Form */
+  .login-box{
+    display:flex;flex-direction:column;gap:12px;align-items:stretch;
+  }
+  .field{display:flex;flex-direction:column;gap:6px}
+  label{font-size:13px;color:var(--muted);font-weight:600}
+  input[type="text"], input[type="password"]{
+    padding:12px 14px;border-radius:10px;border:1px solid rgba(32,38,60,0.06);
+    font-size:15px;outline:none;background:rgba(255,255,255,0.6);
+    transition:box-shadow .18s ease, transform .12s ease;
+  }
+  input:focus{box-shadow:0 6px 24px rgba(100,90,160,0.06); transform:translateY(-2px)}
+  .btn{
+    padding:12px 14px;border-radius:12px;border:0;font-weight:700;cursor:pointer;
+    background: linear-gradient(90deg,var(--soft),var(--accent)); color:white;
+    box-shadow: 0 8px 20px rgba(160,140,220,0.14);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:translateY(2px)}
+  .muted{color:var(--muted);font-size:13px}
+
+  /* small footer */
+  footer{padding:12px 28px;color:var(--muted);font-size:13px}
+
+  /* subtle floating lights */
+  .spark{
+    position:absolute;border-radius:50%;filter:blur(18px);opacity:0.75;pointer-events:none;
+  }
+  .spark.s1{width:220px;height:220px;left:-60px;top:-40px;background:linear-gradient(90deg,#e6f0ff, #eeddff)}
+  .spark.s2{width:140px;height:140px;right:-40px;bottom:-60px;background:linear-gradient(90deg,#fff0f8,#f0f8ff)}
+  .spark.s3{width:80px;height:80px;right:10%;top:6%;background:linear-gradient(90deg,#fff6e8,#e8f6ff)}
+
+  /* small responsive */
+  @media (max-width:880px){
+    .content{flex-direction:column;padding:18px}
+    .side{width:100%}
+    .logo .title{display:none}
+  }
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-labelledby="app-title">
+    <header>
+      <div class="logo" title="Melody of Light">
+        <div class="icon">M</div>
+        <div>
+          <div id="app-title" class="title">Melody of Light</div>
+          <div style="font-size:12px;color:var(--muted)">soft & luminous — for Gray</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a class="nav-link active" data-target="home">Beranda</a>
+        <a class="nav-link" data-target="help">Bantuan</a>
+        <a class="nav-link" data-target="contact">Kontak</a>
+        <a class="nav-link" data-target="about">Tentang</a>
+        <a class="nav-link" data-target="login">Login</a>
+      </nav>
+    </header>
+
+    <div class="content">
+      <div class="view" id="view">
+        <!-- decorative sparks -->
+        <div class="spark s1"></div>
+        <div class="spark s2"></div>
+        <div class="spark s3"></div>
+
+        <!-- Home / Melody of Light -->
+        <section id="page-home" class="page show" aria-hidden="false">
+          <div class="hero">
+            <h1>Melody of Light 🌌</h1>
+            <p class="lead">A soft luminous space where gentle colors sing and small glows become melody. Welcome, Gray — let the light guide the rhythm.</p>
+            <div class="quote card" style="max-width:60%">
+              “Even in the quietest moments, light hums a melody only the heart remembers.”
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;">
+              <button class="btn" data-target="login">Sign in (Gray)</button>
+              <button class="btn" style="background:transparent;color:var(--muted);box-shadow:none;border:1px solid rgba(30,30,60,0.04)" data-target="about">Learn more</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Help -->
+        <section id="page-help" class="page" aria-hidden="true">
+          <div class="card">
+            <h2>Help — Bantuan</h2>
+            <p class="muted">Masalah login? Pastikan username dan PIN benar. (Username: <strong>Gray</strong>, PIN: <strong>0408</strong>).</p>
+            <ul>
+              <li>PIN diinput sebagai password (••••) untuk menjaga privasi.</li>
+              <li>Jika butuh reset, reload halaman dan coba lagi.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="page-contact" class="page" aria-hidden="true">
+          <div class="card">
+            <h2>Kontak</h2>
+            <p class="muted">Butuh bantuan lebih lanjut? Hubungi tim fiksi kami:</p>
+            <p style="margin:0.6rem 0"><strong>Email:</strong>grayvancagultom683@gmail.com</p>
+            <p style="margin:0.6rem 0"><strong>IG:</strong> @gray.vanca</p>
+            <p style="margin: 0.6rem 0">Nomor WhatsApp:</p> <strong>0857-7644-5966</strong>
+          </div>
+        </section>
+
+        <!-- About -->
+        <section id="page-about" class="page" aria-hidden="true">
+          <div class="card">
+            <h2>Tentang</h2>
+            <p class="muted">Melody of Light — konsep antarmuka yang menekankan kelembutan warna, tipografi bersih, dan transisi visual yang halus. Dibuat sebagai demo interaktif untuk Gray.</p>
+          </div>
+        </section>
+
+        <!-- Login -->
+        <section id="page-login" class="page" aria-hidden="true">
+          <div style="display:flex;gap:18px;align-items:flex-start">
+            <div style="flex:1">
+              <div class="card">
+                <h2>Login</h2>
+                <p class="muted">Masukkan username & PIN untuk masuk ke “Melody of Light”</p>
+                <form id="loginForm" class="login-box" autocomplete="off" onsubmit="return false;">
+                  <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" inputmode="text" placeholder="Your username" value="Gray" aria-label="Username" required />
+                  </div>
+                  <div class="field">
+                    <label for="pin">PIN</label>
+                    <input id="pin" type="password" inputmode="numeric" placeholder="••••" maxlength="4" pattern="\d{4}" aria-label="PIN" required />
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                      <div class="muted">PIN will be hidden as ••••</div>
+                      <div style="display:flex;gap:8px;align-items:center">
+                        <button id="showPin" type="button" style="background:none;border:0;font-size:13px;color:var(--muted);cursor:pointer">Show</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;gap:10px;margin-top:6px;">
+                    <button id="loginBtn" class="btn" type="button">Sign in</button>
+                    <button id="quick0408" type="button" style="background:transparent;border:1px solid rgba(30,30,60,0.04);border-radius:12px;padding:12px 14px;cursor:pointer">Use PIN 0408</button>
+                  </div>
+
+                  <div id="loginMsg" class="muted" style="margin-top:8px"></div>
+                </form>
+              </div>
+            </div>
+
+            <aside style="width:260px;">
+              <div class="card" style="text-align:center;">
+                <h3 style="margin:0">Welcome, Gray ✨</h3>
+                <p class="muted" style="margin-top:8px">A gentle space awaits — after sign in you'll be guided to the Melody of Light experience.</p>
+                <div style="margin-top:12px">
+                  <small class="muted">Quick tip: click "Use PIN 0408" to autofill.</small>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="side" aria-label="Sidebar">
+        <div class="card">
+          <h3 style="margin:0">Navigation</h3>
+          <p class="muted" style="margin-top:8px">Jump between pages — transitions are smooth and animated.</p>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <button class="nav-link" data-target="home">Beranda</button>
+            <button class="nav-link" data-target="login">Login</button>
+            <button class="nav-link" data-target="help">Bantuan</button>
+            <button class="nav-link" data-target="contact">Kontak</button>
+            <button class="nav-link" data-target="about">Tentang</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px;text-align:center">
+          <h4 style="margin:0">Quote</h4>
+          <p class="muted" style="margin-top:10px;font-style:italic">"Let the glow compose the tune your heart already knows."</p>
+        </div>
+
+        <div style="flex:1"></div>
+
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center">
+          <small class="muted">© Melody of Light — Demo</small>
+        </div>
+      </aside>
+
+    </div>
+
+    <footer>
+      Crafted with soft colors and smooth transitions — open-source demo for Gray.
+    </footer>
+  </div>
+
+<script>
+  // Single-page navigation
+  const links = document.querySelectorAll('.nav-link');
+  const pages = {
+    home: document.getElementById('page-home'),
+    help: document.getElementById('page-help'),
+    contact: document.getElementById('page-contact'),
+    about: document.getElementById('page-about'),
+    login: document.getElementById('page-login')
+  };
+
+  function showPage(name){
+    // update nav active state
+    links.forEach(l=>{
+      if(l.dataset.target === name) l.classList.add('active'); else l.classList.remove('active');
+    });
+
+    // page transitions: hide others, show target
+    Object.keys(pages).forEach(k=>{
+      const el = pages[k];
+      if(k === name){
+        el.classList.add('show');
+        el.setAttribute('aria-hidden','false');
+      } else {
+        el.classList.remove('show');
+        el.setAttribute('aria-hidden','true');
+      }
+    });
+
+    // small visual flourish when going to home (optional)
+    if(name === 'home'){
+      // tiny pulse on hero
+      const hero = pages.home.querySelector('.hero');
+      hero.animate([{transform:'translateY(-6px)'},{transform:'translateY(0)'}], {duration:700, easing:'cubic-bezier(.2,.9,.25,1)'});
+    }
+  }
+
+  // attach nav handlers
+  document.querySelectorAll('[data-target]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const t = e.currentTarget.dataset.target;
+      showPage(t);
+    });
+  });
+
+  // Login logic
+  const expectedUsername = 'Gray';
+  const expectedPIN = '0408';
+  const loginBtn = document.getElementById('loginBtn');
+  const usernameField = document.getElementById('username');
+  const pinField = document.getElementById('pin');
+  const loginMsg = document.getElementById('loginMsg');
+  const quick0408 = document.getElementById('quick0408');
+  const showPin = document.getElementById('showPin');
+
+  // Autofill helper
+  quick0408.addEventListener('click', ()=>{
+    pinField.value = expectedPIN;
+    loginMsg.textContent = 'PIN autofilled.';
+    pinField.focus();
+    setTimeout(()=> loginMsg.textContent = '', 1600);
+  });
+
+  // toggle show/hide pin
+  let pinVisible = false;
+  showPin.addEventListener('click', ()=>{
+    pinVisible = !pinVisible;
+    pinField.type = pinVisible ? 'text' : 'password';
+    showPin.textContent = pinVisible ? 'Hide' : 'Show';
+    pinField.focus();
+  });
+
+  function animateTransitionToMelody(){
+    // small page-wide fade + scale to create dramatic transition
+    const app = document.querySelector('.app');
+    app.animate([
+      {filter:'none', transform:'scale(1)'},
+      {filter:'blur(6px) saturate(90%)', transform:'scale(.99)'},
+      {filter:'none', transform:'scale(1)'}
+    ], {duration:900, easing:'cubic-bezier(.2,.9,.25,1)'});
+  }
+
+  loginBtn.addEventListener('click', ()=>{
+    const user = (usernameField.value || '').trim();
+    const pin = (pinField.value || '').trim();
+
+    // simple validation
+    if(user === '' || pin === ''){
+      loginMsg.textContent = 'Please enter username and PIN.';
+      return;
+    }
+
+    // credential check
+    if(user === expectedUsername && pin === expectedPIN){
+      loginMsg.style.color = '#2b7a2b';
+      loginMsg.textContent = 'Login successful — welcome, Gray ✨';
+      // animate and go to Melody of Light (home)
+      animateTransitionToMelody();
+      setTimeout(()=>{
+        showPage('home');
+        // optionally focus something on home
+        const heroTitle = pages.home.querySelector('h1');
+        if(heroTitle) heroTitle.focus();
+      }, 590);
+    } else {
+      loginMsg.style.color = '#a33';
+      loginMsg.textContent = 'Invalid username or PIN. Try again.';
+      pinField.value = '';
+      pinField.focus();
+    }
+  });
+
+  // allow Enter key to submit
+  [usernameField, pinField].forEach(inp=>{
+    inp.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') loginBtn.click();
+    });
+  });
+
+  // initial focus
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // show home first
+    showPage('home');
+  });
+
+  // Accessibility: allow focusing pages via keyboard
+  Object.values(pages).forEach(p=> p.tabIndex = -1);
+</script>
+</body>
+</html>
